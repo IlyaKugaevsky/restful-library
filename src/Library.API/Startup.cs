@@ -6,6 +6,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.EntityFrameworkCore;
 using Library.Data.Entities;
 using Library.API.Services;
+using Library.API.Helpers;
 
 namespace Library.API
 {
@@ -34,6 +35,7 @@ namespace Library.API
 
             // register the repository
             services.AddScoped<ILibraryRepository, LibraryRepository>();
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -50,6 +52,16 @@ namespace Library.API
             {
                 app.UseExceptionHandler();
             }
+
+            AutoMapper.Mapper.Initialize(cfg =>
+            {
+                cfg.CreateMap<Library.Data.Entities.Author, 
+                Library.API.Models.AuthorDto>()
+                    .ForMember(dest => dest.Name, opt =>
+                    opt.MapFrom( src => $"{src.FirstName} {src.LastName}"))
+                    .ForMember(dest => dest.Age, opt =>
+                    opt.MapFrom(src => src.DateOfBirth.GetCurrentAge()));
+            });
 
             libraryContext.EnsureSeedDataForContext();
 
