@@ -23,7 +23,7 @@ namespace Library.API
                 .UseContentRoot(Directory.GetCurrentDirectory())
                 .UseIISIntegration()
                 .UseStartup<Startup>()
-                .UseUrls("http://localhost:5000/")
+                .UseUrls("http://localhost:6058/")
                 .Build();
     }
 }

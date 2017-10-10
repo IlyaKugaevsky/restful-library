@@ -38,7 +38,7 @@ namespace Library.API.Controllers
             }
 
             var author = Mapper.Map<AuthorDto>(authorFromRepo);
-            return new JsonResult(author);
+            return Ok(author);
         }
     }
 }
