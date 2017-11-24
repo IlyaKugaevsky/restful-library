@@ -10,6 +10,7 @@ using System.IO;
 using Library.Data.Entities;
 using Library.API.Services;
 using Library.API.Helpers;
+using Library.API.Models;
 
 namespace Library.API
 {
@@ -67,14 +68,15 @@ namespace Library.API
 
             AutoMapper.Mapper.Initialize(cfg =>
             {
-                cfg.CreateMap<Library.Data.Entities.Author, 
-                Library.API.Models.AuthorDto>()
+                cfg.CreateMap<Author, AuthorDto>()
                     .ForMember(dest => dest.Name, opt =>
                     opt.MapFrom( src => $"{src.FirstName} {src.LastName}"))
                     .ForMember(dest => dest.Age, opt =>
                     opt.MapFrom(src => src.DateOfBirth.GetCurrentAge()));
                 
-                cfg.CreateMap<Library.Data.Entities.Book, Library.API.Models.BookDto>();
+                cfg.CreateMap<Book, BookDto>();
+                cfg.CreateMap<AuthorForCreationDto, Author>();
+                cfg.CreateMap<BookForCreationDto, Book>();
             });
 
             libraryContext.EnsureSeedDataForContext();
