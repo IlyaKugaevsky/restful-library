@@ -188,6 +188,9 @@ UpgradeLog*.htm
 *.mdf
 *.ldf
 
+# MySQL
+*.db
+
 # Business Intelligence projects
 *.rdl.data
 *.bim.layout
