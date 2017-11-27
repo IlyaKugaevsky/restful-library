@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Http;
 using Library.API.Services;
 using Library.API.Models;
 using Library.API.Helpers;
@@ -14,7 +15,12 @@ namespace Library.API.Controllers
     [Route("api/authorcollections")]
     public class AuthorCollectionsController : Controller
     {
-        private ILibraryRepository _libraryRepository;  
+        private ILibraryRepository _libraryRepository;
+
+        public AuthorCollectionsController(ILibraryRepository libraryRepository)
+        {
+            _libraryRepository = libraryRepository;
+        }
 
         [HttpGet("({ids})", Name = "GetAuthorCollection")]
         public IActionResult GetAuthorCollection(
@@ -34,11 +40,6 @@ namespace Library.API.Controllers
 
             var authorsToReturn = Mapper.Map<IEnumerable<AuthorDto>>(authorEntities);
             return Ok(authorsToReturn);
-        }
-
-        public AuthorCollectionsController(ILibraryRepository libraryRepository)
-        {
-            _libraryRepository = libraryRepository;
         }
 
         [HttpPost]
@@ -63,14 +64,12 @@ namespace Library.API.Controllers
             }
 
             var authorCollectionToReturn = Mapper.Map<IEnumerable<AuthorDto>>(authorEntities);
-            var idsAsString = string.Join(",", 
+            var idsAsString = string.Join(",",
                 authorCollectionToReturn.Select(a => a.Id));
 
-            return CreatedAtRoute("GetAuthorCollection", 
-                new { ids = idsAsString},
+            return CreatedAtRoute("GetAuthorCollection",
+                new { ids = idsAsString },
                 authorCollectionToReturn);
         }
-
-
     }
 }

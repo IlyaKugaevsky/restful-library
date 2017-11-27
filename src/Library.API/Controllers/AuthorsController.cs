@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Http;
 using Library.API.Services;
 using Library.API.Models;
 using Library.Data.Entities;
@@ -63,6 +64,36 @@ namespace Library.API.Controllers
             return CreatedAtRoute("GetAuthor", 
                 new {id = authorToReturn.Id},
                 authorToReturn);
+        }
+
+        [HttpPost("{id}")]
+        public IActionResult BlockAuthorCreation(Guid id)
+        {
+            if (_libraryRepository.AuthorExists(id))
+            {
+                return new StatusCodeResult(StatusCodes.Status409Conflict);
+            }
+
+            return BadRequest();
+        }
+
+        [HttpDelete("{id}")]
+        public IActionResult DeleteAuthor(Guid id)
+        {
+            var authorFromRepo = _libraryRepository.GetAuthor(id);
+            if (authorFromRepo == null)
+            {
+                return NotFound();
+            }
+
+            _libraryRepository.DeleteAuthor(authorFromRepo);
+
+            if (!_libraryRepository.Save())
+            {
+                throw new Exception($"Deleting author {id} failed on save.");
+            }
+
+            return NoContent();
         }
     }
 }

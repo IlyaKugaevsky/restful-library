@@ -36,6 +36,8 @@ namespace Library.API
             {
                 setupAction.ReturnHttpNotAcceptable = true;
                 setupAction.OutputFormatters.Add(new XmlDataContractSerializerOutputFormatter());
+                setupAction.InputFormatters.Add(new XmlDataContractSerializerInputFormatter());
+
             });
 
             // services.AddDbContext<LibraryContext>(o => o.UseSqlite("Data Source=library.db"));
