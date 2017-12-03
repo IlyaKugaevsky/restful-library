@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.JsonPatch;
 using Library.API.Services;
 using Library.API.Models;
 using Library.Data.Entities;
@@ -104,6 +105,115 @@ namespace Library.API.Controllers
             return NoContent();
         }
 
+        [HttpPut("{id}")]
+        public IActionResult UpdateBookForAuthor(Guid authorId, Guid id,
+            [FromBody] BookForUpdateDto book)
+        {
+            if (book == null)
+            {
+                return BadRequest();
+            }
+
+            if (!_libraryRepository.AuthorExists(authorId))
+            {
+                return NotFound();
+            }
+
+            var bookForAuthorFromRepo = _libraryRepository.GetBookForAuthor(authorId, id);
+            if (bookForAuthorFromRepo == null)
+            {
+                var bookToAdd = Mapper.Map<Book>(book);
+                bookToAdd.Id = id;
+
+                _libraryRepository.AddBookForAuthor(authorId, bookToAdd);
+
+                if (!_libraryRepository.Save())
+                {
+                    throw new Exception($"Upserting book {id} for author {authorId} failed on save.");
+                }
+
+                var bookToReturn = Mapper.Map<BookDto>(bookToAdd);
+
+                return CreatedAtRoute("GetBookForAuthor",
+                    new { authorId = authorId, id = bookToReturn.Id},
+                    bookToReturn);
+            }
+
+            Mapper.Map(book, bookForAuthorFromRepo);
+
+            _libraryRepository.UpdateBookForAuthor(bookForAuthorFromRepo);
+
+            if (!_libraryRepository.Save())
+            {
+                throw new Exception($"Updating book {id} for author {authorId} failed on save.");
+            }
+
+            return NoContent();
+        }
+
+        [HttpPatch("{id}")]
+        public IActionResult PartiallyUpdateBookForAuthor(Guid authorId, Guid id,
+            [FromBody] JsonPatchDocument<BookForUpdateDto> patchDoc)
+        {
+            if (patchDoc == null)
+            {
+                return BadRequest();
+            }
+
+                        if (!_libraryRepository.AuthorExists(authorId))
+            {
+                return NotFound();
+            }
+
+            var bookForAuthorFromRepo = _libraryRepository.GetBookForAuthor(authorId, id);
+            if (bookForAuthorFromRepo == null)
+            {
+                var bookDto = new BookForUpdateDto();
+                patchDoc.ApplyTo(bookDto, ModelState);
+
+                // if (bookDto.Description == bookDto.Title)
+                // {
+                //     ModelState.AddModelError(nameof(BookForUpdateDto), 
+                //         "The provided description should be different from the title.");
+                // }
+
+                // TryValidateModel(bookDto);
+
+                // if (!ModelState.IsValid)
+                // {
+                //     return new UnprocessableEntityObjectResult(ModelState);
+                // }
+
+                var bookToAdd = Mapper.Map<Book>(bookDto);
+                bookToAdd.Id = id;
+
+                _libraryRepository.AddBookForAuthor(authorId, bookToAdd);
+
+                if (!_libraryRepository.Save())
+                {
+                    throw new Exception($"Upserting book {id} for author {authorId} failed on save.");
+                }
+
+                var bookToReturn = Mapper.Map<BookDto>(bookToAdd);
+                return CreatedAtRoute("GetBookForAuthor",
+                    new { authorId = authorId, id = bookToReturn.Id },
+                    bookToReturn);
+            }
+
+            var bookToPatch = Mapper.Map<BookForUpdateDto>(bookForAuthorFromRepo);
+            patchDoc.ApplyTo(bookToPatch);
+
+            // add validation
+
+            Mapper.Map(bookToPatch, bookForAuthorFromRepo);
+
+            if (!_libraryRepository.Save())
+            {
+                throw new Exception($"Updating book {id} for author {authorId} failed on save.");
+            }
+
+            return NoContent();
+        }
     }
 
 }
