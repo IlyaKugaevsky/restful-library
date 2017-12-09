@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.JsonPatch;
 using Library.API.Services;
 using Library.API.Models;
+using Library.API.Helpers;
 using Library.Data.Entities;
 using AutoMapper;
 
@@ -59,6 +60,17 @@ namespace Library.API.Controllers
             if (book == null)
             {
                 return BadRequest();
+            }
+
+            if (book.Description == book.Title)
+            {
+                ModelState.AddModelError(nameof(BookForCreationDto),
+                    "The provided description should be different from the title.");
+            }
+
+            if (!ModelState.IsValid)
+            {
+                return new UnprocessableEntityObjectResult(ModelState);
             }
 
             if (!_libraryRepository.AuthorExists(authorId))
@@ -160,7 +172,7 @@ namespace Library.API.Controllers
                 return BadRequest();
             }
 
-                        if (!_libraryRepository.AuthorExists(authorId))
+            if (!_libraryRepository.AuthorExists(authorId))
             {
                 return NotFound();
             }
