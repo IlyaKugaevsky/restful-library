@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Formatters;
 using System.IO;
 using Microsoft.AspNetCore.Diagnostics;
-// using NLog.Extensions.Logging;
+using NLog.Extensions.Logging;
 using Library.Data.Entities;
 using Library.API.Services;
 using Library.API.Helpers;
@@ -55,7 +55,11 @@ namespace Library.API
             ILoggerFactory loggerFactory, LibraryContext libraryContext)
         {
             loggerFactory.AddConsole();
+
             loggerFactory.AddDebug(LogLevel.Information);
+
+            loggerFactory.AddNLog();
+            loggerFactory.ConfigureNLog("nlog.config"); 
 
             if (env.IsDevelopment())
             {
