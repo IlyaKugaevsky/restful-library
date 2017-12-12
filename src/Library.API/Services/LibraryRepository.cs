@@ -1,8 +1,8 @@
-﻿using Library.Data.Entities;
-using Library.API.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Library.API.Helpers;
+using Library.Data.Entities;
 
 namespace Library.API.Services
 {
@@ -35,8 +35,6 @@ namespace Library.API.Services
             var author = GetAuthor(authorId);
             if (author != null)
             {
-                // if there isn't an id filled out (ie: we're not upserting),
-                // we should generate one
                 if (book.Id == null)
                 {
                     book.Id = Guid.NewGuid();
@@ -67,13 +65,40 @@ namespace Library.API.Services
 
         public PagedList<Author> GetAuthors(AuthorsResourceParameters authorsResourceParameters)
         {
-            var collectionBeforePaging = _context.Authors
-                .OrderBy(a => a.FirstName)
-                .ThenBy(a => a.LastName);
+            //var collectionBeforePaging = _context.Authors
+            //    .OrderBy(a => a.FirstName)
+            //    .ThenBy(a => a.LastName).AsQueryable();
 
-            return PagedList<Author>.Create(collectionBeforePaging, 
+            var collectionBeforePaging =
+                _context.Authors
+                .OrderBy(a => a.FirstName)
+                .ThenBy(a => a.LastName)
+                .AsQueryable();
+
+            if (!string.IsNullOrEmpty(authorsResourceParameters.Genre))
+            {
+                // trim & ignore casing
+                var genreForWhereClause = authorsResourceParameters.Genre
+                    .Trim().ToLowerInvariant();
+                collectionBeforePaging = collectionBeforePaging
+                    .Where(a => a.Genre.ToLowerInvariant() == genreForWhereClause);
+            }
+
+            if (!string.IsNullOrEmpty(authorsResourceParameters.SearchQuery))
+            {
+                // trim & ignore casing
+                var searchQueryForWhereClause = authorsResourceParameters.SearchQuery
+                    .Trim().ToLowerInvariant();
+
+                collectionBeforePaging = collectionBeforePaging
+                    .Where(a => a.Genre.ToLowerInvariant().Contains(searchQueryForWhereClause)
+                    || a.FirstName.ToLowerInvariant().Contains(searchQueryForWhereClause)
+                    || a.LastName.ToLowerInvariant().Contains(searchQueryForWhereClause));
+            }
+
+            return PagedList<Author>.Create(collectionBeforePaging,
                 authorsResourceParameters.PageNumber,
-                authorsResourceParameters.PageSize);
+                authorsResourceParameters.PageSize);               
         }
 
         public IEnumerable<Author> GetAuthors(IEnumerable<Guid> authorIds)
@@ -92,13 +117,13 @@ namespace Library.API.Services
         public Book GetBookForAuthor(Guid authorId, Guid bookId)
         {
             return _context.Books
-              .Where(b => b.AuthorId == authorId && b.Id == bookId).FirstOrDefault();
+                .Where(b => b.AuthorId == authorId && b.Id == bookId).FirstOrDefault();
         }
 
         public IEnumerable<Book> GetBooksForAuthor(Guid authorId)
         {
             return _context.Books
-                        .Where(b => b.AuthorId == authorId).OrderBy(b => b.Title).ToList();
+                .Where(b => b.AuthorId == authorId).OrderBy(b => b.Title).ToList();
         }
 
         public void UpdateBookForAuthor(Book book)

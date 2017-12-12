@@ -7,10 +7,9 @@ using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace Library.API.Helpers
 {
-    public class UnprocessableEntityObjectResult: ObjectResult
+    public class UnprocessableEntityObjectResult : ObjectResult
     {
-        public UnprocessableEntityObjectResult(ModelStateDictionary modelState)
-            :base(new SerializableError(modelState))
+        public UnprocessableEntityObjectResult(ModelStateDictionary modelState) : base(new SerializableError(modelState))
         {
             if (modelState == null)
             {

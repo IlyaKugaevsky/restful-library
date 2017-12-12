@@ -2,16 +2,17 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Http;
-using Library.API.Services;
-using Library.API.Models;
-using Library.API.Helpers;
-using Library.Data.Entities;
 using AutoMapper;
+using Library.API.Helpers;
+using Library.API.Models;
+using Library.API.Services;
+using Library.Data.Entities;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Library.API.Controllers
 {
+
     [Route("api/authorcollections")]
     public class AuthorCollectionsController : Controller
     {
@@ -24,7 +25,8 @@ namespace Library.API.Controllers
 
         [HttpGet("({ids})", Name = "GetAuthorCollection")]
         public IActionResult GetAuthorCollection(
-            [ModelBinder(BinderType = typeof(ArrayModelBinder))]IEnumerable<Guid> ids)
+
+            [ModelBinder(BinderType = typeof(ArrayModelBinder))] IEnumerable<Guid> ids)
         {
             if (ids == null)
             {
@@ -44,6 +46,7 @@ namespace Library.API.Controllers
 
         [HttpPost]
         public IActionResult CreateAuthorCollection(
+
             [FromBody] IEnumerable<AuthorForCreationDto> authorCollection)
         {
             if (authorCollection == null)

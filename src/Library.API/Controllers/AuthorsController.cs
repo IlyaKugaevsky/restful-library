@@ -1,30 +1,31 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Http;
-using Library.API.Services;
-using Library.API.Models;
-using Library.API.Helpers;
-using Library.Data.Entities;
 using AutoMapper;
+using Library.API.Helpers;
+using Library.API.Models;
+using Library.API.Services;
+using Library.Data.Entities;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Library.API.Controllers
 {
+
     [Route("api/authors")]
     public class AuthorsController : Controller
     {
         private ILibraryRepository _libraryRepository;
         private IUrlHelper _urlHelper;
 
-        public AuthorsController(ILibraryRepository libraryRepository, 
+        public AuthorsController(ILibraryRepository libraryRepository,
             IUrlHelper urlHelper)
         {
             _urlHelper = urlHelper;
             _libraryRepository = libraryRepository;
         }
-        
+
         [HttpGet(Name = "GetAuthors")]
         public IActionResult GetAuthors(AuthorsResourceParameters authorsResourceParameters)
         {
@@ -33,11 +34,11 @@ namespace Library.API.Controllers
 
             var previousPageLink = authorsFromRepo.HasPrevious ?
                 CreateAuthorsResourceUri(authorsResourceParameters,
-                ResourceUriType.PreviousPage) : null;
+                    ResourceUriType.PreviousPage) : null;
 
-            var nextPageLink = authorsFromRepo.HasNext ? 
+            var nextPageLink = authorsFromRepo.HasNext ?
                 CreateAuthorsResourceUri(authorsResourceParameters,
-                ResourceUriType.NextPage) : null;
+                    ResourceUriType.NextPage) : null;
 
             var paginationMetadata = new
             {
@@ -64,32 +65,32 @@ namespace Library.API.Controllers
             {
                 case ResourceUriType.PreviousPage:
                     return _urlHelper.Link("GetAuthors",
-                      new
-                      {
-                        //   searchQuery = authorsResourceParameters.SearchQuery,
-                        //   genre = authorsResourceParameters.Genre,
-                          pageNumber = authorsResourceParameters.PageNumber - 1,
-                          pageSize = authorsResourceParameters.PageSize
-                      });
+                        new
+                        {
+                            searchQuery = authorsResourceParameters.SearchQuery,
+                            genre = authorsResourceParameters.Genre,
+                            pageNumber = authorsResourceParameters.PageNumber - 1,
+                            pageSize = authorsResourceParameters.PageSize
+                        });
                 case ResourceUriType.NextPage:
                     return _urlHelper.Link("GetAuthors",
-                      new
-                      {
-                        //   searchQuery = authorsResourceParameters.SearchQuery,
-                        //   genre = authorsResourceParameters.Genre,
-                          pageNumber = authorsResourceParameters.PageNumber + 1,
-                          pageSize = authorsResourceParameters.PageSize
-                      });
+                        new
+                        {
+                            searchQuery = authorsResourceParameters.SearchQuery,
+                            genre = authorsResourceParameters.Genre,
+                            pageNumber = authorsResourceParameters.PageNumber + 1,
+                            pageSize = authorsResourceParameters.PageSize
+                        });
 
                 default:
                     return _urlHelper.Link("GetAuthors",
-                    new
-                    {
-                        // searchQuery = authorsResourceParameters.SearchQuery,
-                        // genre = authorsResourceParameters.Genre,
-                        pageNumber = authorsResourceParameters.PageNumber,
-                        pageSize = authorsResourceParameters.PageSize
-                    });
+                        new
+                        {
+                            searchQuery = authorsResourceParameters.SearchQuery,
+                            genre = authorsResourceParameters.Genre,
+                            pageNumber = authorsResourceParameters.PageNumber,
+                            pageSize = authorsResourceParameters.PageSize
+                        });
             }
         }
 
@@ -124,8 +125,8 @@ namespace Library.API.Controllers
 
             var authorToReturn = Mapper.Map<AuthorDto>(authorEntity);
 
-            return CreatedAtRoute("GetAuthor", 
-                new {id = authorToReturn.Id},
+            return CreatedAtRoute("GetAuthor",
+                new { id = authorToReturn.Id },
                 authorToReturn);
         }
 

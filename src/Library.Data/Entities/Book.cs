@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -6,10 +6,12 @@ namespace Library.Data.Entities
 {
     public class Book
     {
-        [Key]       
+
+        [Key]
         public Guid Id { get; set; }
 
         [Required]
+
         [MaxLength(100)]
         public string Title { get; set; }
 

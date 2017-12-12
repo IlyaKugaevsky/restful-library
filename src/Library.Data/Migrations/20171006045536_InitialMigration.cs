@@ -1,6 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
 using System;
 using System.Collections.Generic;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Library.Data.Migrations
 {
@@ -10,37 +10,37 @@ namespace Library.Data.Migrations
         {
             migrationBuilder.CreateTable(
                 name: "Authors",
-                columns: table => new
+                columns : table => new
                 {
-                    Id = table.Column<Guid>(type: "BLOB", nullable: false),
-                    DateOfBirth = table.Column<DateTimeOffset>(type: "TEXT", nullable: false),
-                    FirstName = table.Column<string>(type: "TEXT", maxLength: 50, nullable: false),
-                    Genre = table.Column<string>(type: "TEXT", maxLength: 50, nullable: false),
-                    LastName = table.Column<string>(type: "TEXT", maxLength: 50, nullable: false)
+                    Id = table.Column<Guid>(type: "BLOB", nullable : false),
+                        DateOfBirth = table.Column<DateTimeOffset>(type: "TEXT", nullable : false),
+                        FirstName = table.Column<string>(type: "TEXT", maxLength : 50, nullable : false),
+                        Genre = table.Column<string>(type: "TEXT", maxLength : 50, nullable : false),
+                        LastName = table.Column<string>(type: "TEXT", maxLength : 50, nullable : false)
                 },
-                constraints: table =>
+                constraints : table =>
                 {
                     table.PrimaryKey("PK_Authors", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
                 name: "Books",
-                columns: table => new
+                columns : table => new
                 {
-                    Id = table.Column<Guid>(type: "BLOB", nullable: false),
-                    AuthorId = table.Column<Guid>(type: "BLOB", nullable: false),
-                    Description = table.Column<string>(type: "TEXT", maxLength: 500, nullable: true),
-                    Title = table.Column<string>(type: "TEXT", maxLength: 100, nullable: false)
+                    Id = table.Column<Guid>(type: "BLOB", nullable : false),
+                        AuthorId = table.Column<Guid>(type: "BLOB", nullable : false),
+                        Description = table.Column<string>(type: "TEXT", maxLength : 500, nullable : true),
+                        Title = table.Column<string>(type: "TEXT", maxLength : 100, nullable : false)
                 },
-                constraints: table =>
+                constraints : table =>
                 {
                     table.PrimaryKey("PK_Books", x => x.Id);
                     table.ForeignKey(
                         name: "FK_Books_Authors_AuthorId",
-                        column: x => x.AuthorId,
+                        column : x => x.AuthorId,
                         principalTable: "Authors",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete : ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(

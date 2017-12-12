@@ -2,23 +2,24 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
+using Library.API.Helpers;
+using Library.API.Models;
+using Library.API.Services;
+using Library.Data.Entities;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Microsoft.AspNetCore.JsonPatch;
-using Library.API.Services;
-using Library.API.Models;
-using Library.API.Helpers;
-using Library.Data.Entities;
-using AutoMapper;
 
 namespace Library.API.Controllers
 {
+
     [Route("api/authors/{authorId}/books")]
     public class BooksController : Controller
     {
         private ILibraryRepository _libraryRepository;
         private ILogger<BooksController> _logger;
-        public BooksController(ILibraryRepository libraryRepository, 
+        public BooksController(ILibraryRepository libraryRepository,
             ILogger<BooksController> logger)
         {
             _libraryRepository = libraryRepository;
@@ -93,7 +94,7 @@ namespace Library.API.Controllers
             var bookToReturn = Mapper.Map<BookDto>(bookEntity);
 
             return CreatedAtRoute("GetBookForAuthor",
-                new {authorId = authorId, id = bookToReturn.Id},
+                new { authorId = authorId, id = bookToReturn.Id },
                 bookToReturn);
         }
 
@@ -125,6 +126,7 @@ namespace Library.API.Controllers
 
         [HttpPut("{id}")]
         public IActionResult UpdateBookForAuthor(Guid authorId, Guid id,
+
             [FromBody] BookForUpdateDto book)
         {
             if (book == null)
@@ -134,7 +136,7 @@ namespace Library.API.Controllers
 
             if (book.Description == book.Title)
             {
-                ModelState.AddModelError(nameof(BookForUpdateDto), 
+                ModelState.AddModelError(nameof(BookForUpdateDto),
                     "The provided description should be different from the title.");
             }
 
@@ -164,7 +166,7 @@ namespace Library.API.Controllers
                 var bookToReturn = Mapper.Map<BookDto>(bookToAdd);
 
                 return CreatedAtRoute("GetBookForAuthor",
-                    new { authorId = authorId, id = bookToReturn.Id},
+                    new { authorId = authorId, id = bookToReturn.Id },
                     bookToReturn);
             }
 
@@ -182,6 +184,7 @@ namespace Library.API.Controllers
 
         [HttpPatch("{id}")]
         public IActionResult PartiallyUpdateBookForAuthor(Guid authorId, Guid id,
+
             [FromBody] JsonPatchDocument<BookForUpdateDto> patchDoc)
         {
             if (patchDoc == null)
@@ -202,7 +205,7 @@ namespace Library.API.Controllers
 
                 if (bookDto.Description == bookDto.Title)
                 {
-                    ModelState.AddModelError(nameof(BookForUpdateDto), 
+                    ModelState.AddModelError(nameof(BookForUpdateDto),
                         "The provided description should be different from the title.");
                 }
 
@@ -234,7 +237,7 @@ namespace Library.API.Controllers
 
             if (bookToPatch.Description == bookToPatch.Title)
             {
-                ModelState.AddModelError(nameof(BookForUpdateDto), 
+                ModelState.AddModelError(nameof(BookForUpdateDto),
                     "The provided description should be different from the title.");
             }
 

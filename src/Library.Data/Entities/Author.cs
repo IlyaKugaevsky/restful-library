@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
@@ -6,14 +6,17 @@ namespace Library.Data.Entities
 {
     public class Author
     {
+
         [Key]
         public Guid Id { get; set; }
 
         [Required]
+
         [MaxLength(50)]
         public string FirstName { get; set; }
 
         [Required]
+
         [MaxLength(50)]
         public string LastName { get; set; }
 
@@ -21,10 +24,10 @@ namespace Library.Data.Entities
         public DateTimeOffset DateOfBirth { get; set; }
 
         [Required]
+
         [MaxLength(50)]
         public string Genre { get; set; }
 
-        public ICollection<Book> Books { get; set; }
-            = new List<Book>();
+        public ICollection<Book> Books { get; set; } = new List<Book>();
     }
 }

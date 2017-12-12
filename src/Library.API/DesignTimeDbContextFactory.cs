@@ -1,9 +1,9 @@
 using System.IO;
 using Library.Data.Entities;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Library.Data
 {
@@ -15,13 +15,13 @@ namespace Library.Data
                 .SetBasePath(Directory.GetCurrentDirectory())
                 .AddJsonFile("appsettings.json")
                 .Build();
-    
+
             var builder = new DbContextOptionsBuilder<LibraryContext>();
-    
+
             builder.UseSqlite("Data Source=library.db");
-    
+
             return new LibraryContext(builder.Options);
         }
-    }    
+    }
 
 }

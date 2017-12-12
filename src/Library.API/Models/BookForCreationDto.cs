@@ -6,7 +6,5 @@ using System.Threading.Tasks;
 
 namespace Library.API.Models
 {
-    public class BookForCreationDto : BookForManipulationDto
-    {
-    }
+    public class BookForCreationDto : BookForManipulationDto { }
 }

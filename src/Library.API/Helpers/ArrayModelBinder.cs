@@ -1,10 +1,10 @@
-using Microsoft.AspNetCore.Mvc.ModelBinding;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace Library.API.Helpers
 {
@@ -37,7 +37,7 @@ namespace Library.API.Helpers
             var converter = TypeDescriptor.GetConverter(elementType);
 
             // Convert each item in the value list to the enumerable type
-            var values = value.Split(new[] { "," }, StringSplitOptions.RemoveEmptyEntries)
+            var values = value.Split(new [] { "," }, StringSplitOptions.RemoveEmptyEntries)
                 .Select(x => converter.ConvertFromString(x.Trim()))
                 .ToArray();
 
