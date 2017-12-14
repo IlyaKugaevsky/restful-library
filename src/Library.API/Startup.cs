@@ -15,6 +15,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json.Serialization;
 using NLog.Extensions.Logging;
 
 namespace Library.API
@@ -38,14 +39,18 @@ namespace Library.API
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc(setupAction =>
-            {
-                setupAction.ReturnHttpNotAcceptable = true;
-                setupAction.OutputFormatters.Add(new XmlDataContractSerializerOutputFormatter());
-                setupAction.InputFormatters.Add(new XmlDataContractSerializerInputFormatter());
+                {
+                    setupAction.ReturnHttpNotAcceptable = true;
+                    setupAction.OutputFormatters.Add(new XmlDataContractSerializerOutputFormatter());
+                    setupAction.InputFormatters.Add(new XmlDataContractSerializerInputFormatter());
 
-            });
+                })
+                .AddJsonOptions(options =>
+                {
+                    options.SerializerSettings.ContractResolver =
+                        new CamelCasePropertyNamesContractResolver();
+                });
 
-            // services.AddDbContext<LibraryContext>(o => o.UseSqlite("Data Source=library.db"));
             services.AddDbContext<LibraryContext>(o => o.UseSqlite("Data Source=library.db"));
 
             // register the repository
