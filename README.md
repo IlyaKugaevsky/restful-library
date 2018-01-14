@@ -3,6 +3,7 @@ Simple RESTful (well, almost RESTful) service: books and authors. No frontend, j
 
 ### Tech stack
 - ASP.NET Core Web API
+- Entity Framework Core
 - Newtonsoft.Json, JsonPatch
 - Automapper
 
