@@ -1,5 +1,5 @@
 # Restful library
-Simple RESTful (well, almost RESTful) service: books and authors. No frontend, just API endpoints. 
+Simple RESTful (well, almost RESTful) service: books and authors. No frontend, just endpoints. Sort of a boilerplate for REST API projects.
 
 ### Tech stack
 - ASP.NET Core Web API
